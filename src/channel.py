@@ -22,6 +22,10 @@ class Channel:
         self.subscriber_count = self.request['items'][0]['statistics']['subscriberCount']
         self.view_count = self.request['items'][0]['statistics']['viewCount']
 
+    def __str__(self):
+        """ Возвращает название и ссылку на канал по шаблону 'название_канала' ('ссылка_на_канал') """
+        return f"'{self.title} ({self.url})'"
+
     @property
     def channel_id(self):
         return self.__channel_id
@@ -50,3 +54,31 @@ class Channel:
 
         with open(channel_name, 'w') as file:
             file.write(json.dumps(to_json, indent=2, ensure_ascii=False))
+
+    def __add__(self, other) -> int:
+        """ Складывает данные двух каналов по количеству подписчиков"""
+        return int(self.subscriber_count) + int(other.subscriber_count)
+
+    def __sub__(self, other) -> int:
+        """ Вычитает данные двух каналов по количеству подписчиков"""
+        return int(self.subscriber_count) - int(other.subscriber_count)
+
+    def __gt__(self, other) -> bool:
+        """ Сравнивает 'больше' данные двух каналов по количеству подписчиков"""
+        return int(self.subscriber_count) > int(other.subscriber_count)
+
+    def __ge__(self, other) -> bool:
+        """ Сравнивает 'больше' или 'равно' данные двух каналов по количеству подписчиков"""
+        return int(self.subscriber_count) >= int(other.subscriber_count)
+
+    def __lt__(self, other) -> bool:
+        """ Сравнивает 'меньше' данные двух каналов по количеству подписчиков"""
+        return int(self.subscriber_count) < int(other.subscriber_count)
+
+    def __le__(self, other) -> bool:
+        """ Сравнивает 'меньше' или 'равно' данные двух каналов по количеству подписчиков"""
+        return int(self.subscriber_count) <= int(other.subscriber_count)
+
+    def __eq__(self, other) -> bool:
+        """ Сравнивает 'равны' или 'не равны' данные двух каналов по количеству подписчиков"""
+        return int(self.subscriber_count) == int(other.subscriber_count)
