@@ -1,24 +1,32 @@
 import os
 from googleapiclient.discovery import build
 import json
+from src.MixinAPI import MixinAPI
 
 
-class Video:
-    """ Класс для Video из Youtube"""
+class Video(MixinAPI):
+
     def __init__(self, video_id):
         """Инициализирует video_id"""
         self.__video_id = video_id
 
-        self.request = Video.get_service().videos().list(
-            part='snippet,statistics,contentDetails,topicDetails',
-            id=self.__video_id
-        ).execute()
+        try:
+            self.request = Video.get_service().videos().list(
+                part='snippet,statistics,contentDetails,topicDetails',
+                id=self.__video_id
+            ).execute()
 
-        # Берем данные из API
-        self.video_title = self.request['items'][0]['snippet']['title']
-        self.view_count = self.request['items'][0]['statistics']['viewCount']
-        self.like_count = self.request['items'][0]['statistics']['likeCount']
-        self.video_url = f"https://www.youtube.com/watch?v={self.__video_id}"
+            self.title = self.request['items'][0]['snippet']['title']
+            self.view_count = self.request['items'][0]['statistics']['viewCount']
+            self.like_count = self.request['items'][0]['statistics']['likeCount']
+            self.video_url = f"https://www.youtube.com/watch?v={self.__video_id}"
+
+        except IndexError:
+            self.title = None
+            self.view_count = None
+            self.like_count = None
+            self.video_url = None
+            print("Не верный video_id")
 
 
     @property
